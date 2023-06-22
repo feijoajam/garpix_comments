@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from garpix_notify.mixins import UserNotifyMixin
+from garpix_user.models import GarpixUser
 
 
-class User(AbstractUser, UserNotifyMixin):
+class User(GarpixUser):
     pass
 
     class Meta:
