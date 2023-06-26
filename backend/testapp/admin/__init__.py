@@ -1,0 +1,1 @@
+from .mypost import MyPost
