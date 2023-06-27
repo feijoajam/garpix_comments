@@ -6,4 +6,5 @@ MIGRATION_MODULES.update({  # noqa:F405
 
 INSTALLED_APPS += [
     'garpix_comments',
+    'testapp'
 ]
