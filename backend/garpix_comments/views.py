@@ -12,17 +12,9 @@ from .models import Comment, Like
 from .serializers import CommentSerializer, CommentCreateSerializer, LikeSerializer
 
 
-# @extend_schema(
-#     parameters=[
-#         OpenApiParameter(name='object_id', type=int, required=False),
-#         OpenApiParameter(name='source_type', type=int, required=False)
-#     ]
-# )
-
-
-# class CommentsViewSet(CreateModelMixin, ListModelMixin, DestroyModelMixin, GenericViewSet):
 class CommentsViewSet(ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Comment.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -37,12 +29,12 @@ class CommentsViewSet(ModelViewSet):
             OpenApiParameter("object_id", int),
         ]
     )
-    def get_queryset(self, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         object_id = self.request.GET.get('object_id', None)
         source_type = self.request.GET.get('source_type', None)
         if object_id and source_type:
-            return Comment.objects.filter(object_id=object_id, source_type=source_type)
-        return Comment.objects.all()
+            self.queryset = super().get_queryset().filter(object_id=object_id, source_type=source_type)
+        return super().list(self, request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.validated_data['author'] = self.request.user
