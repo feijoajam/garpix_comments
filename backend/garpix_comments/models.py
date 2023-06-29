@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Comment(models.Model):
@@ -19,7 +22,8 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    # user = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
 
     class Meta:
