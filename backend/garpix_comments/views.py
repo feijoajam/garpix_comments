@@ -56,3 +56,17 @@ class CommentsViewSet(ModelViewSet):
         queryset = Like.objects.filter(comment=self.get_object())
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter("level", int),
+        ]
+    )
+    @action(methods=['GET'], detail=True)
+    def get_child_comments(self, request, pk, *args, **kwargs):
+        node = self.get_object()
+        level = self.request.GET.get('level', None)
+        queryset = node.get_descendants().filter(level__lte=node.level + int(level))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+

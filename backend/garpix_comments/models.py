@@ -3,11 +3,14 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
 
 User = get_user_model()
 
 
-class Comment(models.Model):
+# class Comment(models.Model):
+class Comment(MPTTModel):
     """
         Комментарии к сущности. Есть возможность ответа на верхнеуровневый комментарий, но не глубже.
     """
@@ -19,6 +22,7 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
     @property
     def source(self):
@@ -26,6 +30,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return "{}: {}".format(self.author, self.text)
+
+    class MPTTMeta:
+        order_insertion_by = ['text']
 
 
 class Like(models.Model):
