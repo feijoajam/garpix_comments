@@ -15,10 +15,17 @@ class Comment(models.Model):
     text = models.TextField(verbose_name='Описание', blank=True, default='')
     author = models.ForeignKey('user.User', verbose_name=_('Автор'), on_delete=models.CASCADE,
                                related_name='author')
-    source_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, verbose_name=_('Source type'))
-    source_object = GenericForeignKey('source_type', 'object_id')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, verbose_name=_('Content type'))
+    content_object = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+
+    @property
+    def source(self):
+        return self.content_type.get_object_for_this_type(pk=self.object_id)
+
+    def __str__(self):
+        return "{}: {}".format(self.author, self.text)
 
 
 class Like(models.Model):

@@ -25,15 +25,15 @@ class CommentsViewSet(ModelViewSet):
 
     @extend_schema(
         parameters=[
-            OpenApiParameter("source_type", int),
+            OpenApiParameter("content_type", int),
             OpenApiParameter("object_id", int),
         ]
     )
     def list(self, request, *args, **kwargs):
         object_id = self.request.GET.get('object_id', None)
-        source_type = self.request.GET.get('source_type', None)
-        if object_id and source_type:
-            self.queryset = super().get_queryset().filter(object_id=object_id, source_type=source_type)
+        content_type = self.request.GET.get('content_type', None)
+        if object_id and content_type:
+            self.queryset = super().get_queryset().filter(object_id=object_id, content_type=content_type)
         return super().list(self, request, *args, **kwargs)
 
     def perform_create(self, serializer):
