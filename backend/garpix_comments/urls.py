@@ -6,5 +6,5 @@ from .routers import router
 app_name = 'garpix_comments'
 
 urlpatterns = [
-    path('', include(router.urls))
+    path(f'{settings.API_URL}/', include(router.urls))
 ]

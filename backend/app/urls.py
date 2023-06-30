@@ -7,5 +7,5 @@ from django.conf import settings
 API_URL = getattr(settings, 'API_URL', 'api')
 
 urlpatterns = [
-                  path(f'{API_URL}/', include('garpix_comments.urls'))  # noqa: F405
+                path('', include(('garpix_comments.urls', 'comments'), namespace='garpix_comments')),
               ] + urlpatterns  # noqa

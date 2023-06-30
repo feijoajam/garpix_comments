@@ -46,8 +46,6 @@ python3 backend/manage.py migrate
 
 # ...
 urlpatterns = [
-    # ...
-    # garpix_favourite
     path('', include(('garpix_comments.urls', 'comments'), namespace='garpix_comments')),
 
 ]
