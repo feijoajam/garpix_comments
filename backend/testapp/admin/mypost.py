@@ -5,6 +5,3 @@ from ..models import MyPost
 @admin.register(MyPost)
 class MyPostAdmin(admin.ModelAdmin):
     pass
-
-
-

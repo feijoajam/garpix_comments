@@ -1,12 +1,8 @@
-from django.shortcuts import render
-from rest_framework import permissions, status
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, DestroyModelMixin
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-import requests
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework.generics import get_object_or_404
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Comment, Like
 from .serializers import CommentSerializer, CommentCreateSerializer, LikeSerializer
@@ -69,4 +65,3 @@ class CommentsViewSet(ModelViewSet):
         queryset = node.get_descendants().filter(level__lte=node.level + int(level))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
