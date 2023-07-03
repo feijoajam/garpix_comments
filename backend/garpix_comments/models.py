@@ -1,15 +1,18 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
+from backend.app.settings import COMMENT_DEPTH_LEVEL, ACCEPTED_COMMENT_MODELS
+
 User = get_user_model()
 
 
-# class Comment(models.Model):
 class Comment(MPTTModel):
     """
         Комментарии к сущности. Есть возможность ответа на верхнеуровневый комментарий, но не глубже.
@@ -31,8 +34,24 @@ class Comment(MPTTModel):
     def __str__(self):
         return "{}: {}".format(self.author, self.text)
 
+    def save(self, *args, **kwargs):
+        model_class = self.content_type.model_class()
+        content_object = get_object_or_404(model_class, pk=self.object_id)
+        if content_object._meta.model_name not in ACCEPTED_COMMENT_MODELS:
+            raise ValidationError(
+                _('Model %s must be in ACCEPTED_COMMENT_MODELS' % content_object._meta.model_name))
+
+        if self.parent:
+            lvl = self.parent.level if self.parent.level else 0
+            if lvl >= COMMENT_DEPTH_LEVEL - 1:
+                raise ValidationError("Максимальная вложенность: %i" % COMMENT_DEPTH_LEVEL)
+            if self.parent.source != content_object:
+                raise ValidationError("Родитель и ребенок должны комментировать один объект")
+
+        super().save(*args, **kwargs)
+
     class MPTTMeta:
-        order_insertion_by = ['text']
+        order_insertion_by = ['created_at']
 
 
 class Like(models.Model):

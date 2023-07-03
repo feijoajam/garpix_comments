@@ -6,6 +6,7 @@ MIGRATION_MODULES.update({  # noqa:F405
 })
 
 ACCEPTED_COMMENT_MODELS = ['mypost']
+COMMENT_DEPTH_LEVEL = 3
 
 INSTALLED_APPS += [
     'garpix_comments',
