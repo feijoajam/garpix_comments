@@ -57,6 +57,9 @@ class Comment(MPTTModel):
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
+    # object_id = models.PositiveIntegerField(verbose_name=_('Object ID'))
+    # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, verbose_name=_('Content type'))
+    # content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         unique_together = (('user', 'comment'),)
