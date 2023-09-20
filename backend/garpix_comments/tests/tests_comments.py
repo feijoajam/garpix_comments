@@ -6,10 +6,11 @@ from django.contrib.contenttypes.models import ContentType
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Comment, Like
-
-
+from backend.garpix_comments.models.comment import Comment, Like
 from testapp.models import MyPost
+
+# from ..testapp.models import MyPost
+# MyPost
 
 User = get_user_model()
 
@@ -106,7 +107,7 @@ class CommentTestCase(APITestCase):
             json_data = json.dumps(data)
             self.client.post(url, data=json_data, content_type='application/json')
 
-    def test_like(self):
+    def test_like_comment(self):
         url = reverse('garpix_comments:comments-like', args=(self.comment1.id,))
         json_data = json.dumps({})
         self.client.force_login(self.user1)

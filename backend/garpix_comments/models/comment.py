@@ -54,6 +54,10 @@ class Comment(MPTTModel):
         order_insertion_by = ['created_at']
 
 
+    # class Meta:
+    #     app_label = 'garpix_comments'
+
+
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')

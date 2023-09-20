@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Comment, Like
+from backend.garpix_comments.models.comment import Comment, Like
 from .serializers import CommentSerializer, CommentCreateSerializer, LikeSerializer
 
 

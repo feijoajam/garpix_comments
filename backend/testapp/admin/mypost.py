@@ -1,5 +1,9 @@
 from django.contrib import admin
-from ..models import MyPost
+
+from backend.testapp.models import MyPost
+
+
+# from ..models import MyPost
 
 
 @admin.register(MyPost)
