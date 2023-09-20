@@ -1,7 +1,7 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
-from backend.garpix_comments.models.comment import Comment
+from garpix_comments.models.comment import Comment
 
 
 # @admin.register(Comment)

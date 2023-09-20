@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from backend.testapp.models import MyPost
+from testapp.models import MyPost
 
 
 # from ..models import MyPost

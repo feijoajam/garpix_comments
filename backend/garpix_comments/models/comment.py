@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
-from backend.app.settings import COMMENT_DEPTH_LEVEL, ACCEPTED_COMMENT_MODELS
+from app.settings import COMMENT_DEPTH_LEVEL, ACCEPTED_COMMENT_MODELS
 
 User = get_user_model()
 

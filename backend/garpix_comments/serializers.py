@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.garpix_comments.models.comment import Comment, Like
+from garpix_comments.models.comment import Comment, Like
 from django.conf import settings
 
 
