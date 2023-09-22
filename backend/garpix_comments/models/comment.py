@@ -15,7 +15,7 @@ User = get_user_model()
 
 class Comment(MPTTModel):
     """
-        Комментарии к сущности. Есть возможность ответа на верхнеуровневый комментарий, но не глубже.
+        Комментарии к сущности. Есть возможность ответа на комментарий, максимальная глубина задается параметром.
     """
     object_id = models.PositiveIntegerField(verbose_name=_('Object ID'))
     text = models.TextField(verbose_name='Описание', blank=True, default='')
@@ -52,20 +52,3 @@ class Comment(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['created_at']
-
-
-    # class Meta:
-    #     app_label = 'garpix_comments'
-
-
-class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
-    # object_id = models.PositiveIntegerField(verbose_name=_('Object ID'))
-    # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, verbose_name=_('Content type'))
-    # content_object = GenericForeignKey('content_type', 'object_id')
-
-    class Meta:
-        unique_together = (('user', 'comment'),)
-        verbose_name = _('Лайк')
-        verbose_name_plural = _('Лайки')

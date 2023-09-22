@@ -6,11 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-from backend.garpix_comments.models.comment import Comment, Like
+
+from garpix_comments.models import Like, Comment
 from testapp.models import MyPost
 
-# from ..testapp.models import MyPost
-# MyPost
 
 User = get_user_model()
 
@@ -112,10 +111,29 @@ class CommentTestCase(APITestCase):
         json_data = json.dumps({})
         self.client.force_login(self.user1)
         self.client.force_authenticate(self.user1)
+        ct = ContentType.objects.get_for_model(self.comment1)
 
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertTrue(Like.objects.filter(user=self.user1, comment=self.comment1).exists())
+        self.assertTrue(Like.objects.filter(user=self.user1, object_id=self.comment1.id, content_type=ct).exists())
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertFalse(Like.objects.filter(user=self.user1, comment=self.comment1).exists())
+        self.assertFalse(Like.objects.filter(user=self.user1, object_id=self.comment1.id, content_type=ct).exists())
+
+    def test_like_mypost(self):
+        url = reverse('garpix_comments:comments-list')
+        comments_count = Comment.objects.all().count()
+        self.client.force_login(self.user3)
+        self.client.force_authenticate(self.user3)
+
+        data = {
+            "text": "comment1",
+            "object_id": self.post1.pk,
+            "content_type": self.model_type.id
+        }
+        json_data = json.dumps(data)
+        response = self.client.post(url, data=json_data, content_type='application/json')
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(comments_count + 1, Comment.objects.all().count())
+        self.assertEqual(self.user3, Comment.objects.last().author)
+        self.assertEqual(Comment.objects.last().source.pk, self.post1.pk)
